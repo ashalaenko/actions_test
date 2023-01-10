@@ -25,6 +25,8 @@ jobs:
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
+          git config user.email "ashalaenko@gmail.com";
+          git config user.name "Andrew Shalaenko"
           git add -A && git commit -m "commit generated files";
           git tag "tag_$branch_name";
           git push origin "$branch_name" --tags;
