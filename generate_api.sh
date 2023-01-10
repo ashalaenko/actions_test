@@ -5,7 +5,7 @@ TEMPLATE_DIR="openapi_templates"
 CURRENT_DIR=$(pwd)
 OPENAPI_GENERATOR_CLI_URL="https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/6.2.1/openapi-generator-cli-6.2.1.jar"
 ASANA_APIS_DIR=$CURRENT_DIR/asana/resources/gen
-ASANA_DOCS_DIR=CURRENT_DIR/samples
+ASANA_DOCS_DIR=$CURRENT_DIR/samples
 
 # utility function for printing error
 echoerr() { echo "$@" 1>&2; }
