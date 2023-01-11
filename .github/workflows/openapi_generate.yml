@@ -33,7 +33,7 @@ jobs:
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
-          git commit -A -m "commit generated fileds"
+          git add -A && git commit -m "commit generated fileds"
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
