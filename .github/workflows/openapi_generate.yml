@@ -24,7 +24,7 @@ jobs:
         run: |
           echo "Attachments class:";
           cat ${{ github.workspace }}/asana/resources/gen/attachments.py;
-          cat "AuditLogAPI class:";
+          echo "AuditLogAPI class:";
           cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py 
       - name: Create new branch and push new tags
         run: |
