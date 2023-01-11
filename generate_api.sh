@@ -76,7 +76,7 @@ post_process_apis() {
     cd "$OUT_DIR/asana/apis/" || return 1
     for file in *api*; do
         #trying to remove api's class name suffix
-        remove_classname_suiffix $file || return 1
+        remove_classname_suffix $file || return 1
         mv -- "$file" "${file%%_api.py}.py" || return 1
     done
     cd "$CURRENT_DIR" || return 1
