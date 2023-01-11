@@ -20,6 +20,12 @@ jobs:
         run:  ls ${{ github.workspace }}/asana/resources/gen/
       - name: List files in samples directory and echo current and worksapce directories
         run: ls ${{ github.workspace }}/samples/
+      - name: Check remove classname suffix
+        run: |
+          echo "Attachments class:";
+          cat {{ github.workspace }}/asana/resources/gen/attachments.py;
+          cat "AuditLogAPI class:"
+          cat {{ github.workspace }}/asana/resources/gen/audit_log_api.py 
       - name: Create new branch and push new tags
         run: |
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
@@ -28,7 +34,6 @@ jobs:
           git config user.email "ashalaenko@gmail.com";
           git config user.name "Andrew Shalaenko"
           git add -A && git commit -m "commit generated files";
-          git tag "tag_$branch_name";
-          git push origin "$branch_name" --tags;
+          git push origin "$branch_name";
 
       - run: echo "🍏 This job's status is ${{ job.status }}."

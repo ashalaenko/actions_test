@@ -58,6 +58,10 @@ generate() {
              --global-property apis,apiDocs=true,apiTests=false -p packageName=asana
 }
 
+remove_classname_suiffix() {
+     sed -i 's/\(class .*\)Api\(.*\)/\1\2/' $1
+}
+
 # process apis files :
 # rename files and move it to asana/apis/ folder
 post_process_apis() {
@@ -69,6 +73,7 @@ post_process_apis() {
     # remove sufix _api from files
     cd "$OUT_DIR/asana/apis/" || return 1
     for file in *api*; do
+        remove_classname_suiffix $file
         mv -- "$file" "${file%%_api.py}.py" || return 1
     done
     cd "$CURRENT_DIR" || return 1
