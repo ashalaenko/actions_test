@@ -60,9 +60,7 @@ generate() {
 
 # remove Api suffix from api's class name
 # use GNU sed version, for BSD/MacOS version use sed "s/pattern/replace" input > output instead -i option
-remove_classname_suffix() {
-     sed -i 's/\(class .*\)Api\(.*\)/\1\2/' $1
-}
+remove_classname_suffix() { sed -i 's/\(class .*\)Api\(.*\)/\1\2/' $1; }
 
 # process apis files :
 # rename files and move it to asana/apis/ folder
