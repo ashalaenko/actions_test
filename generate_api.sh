@@ -58,7 +58,9 @@ generate() {
              --global-property apis,apiDocs=true,apiTests=false -p packageName=asana
 }
 
-remove_classname_suiffix() {
+# remove Api suffix from api's class name
+# use GNU sed version, for BSD/MacOS version use sed "s/pattern/replace" input > output instead -i option
+remove_classname_suffix() {
      sed -i 's/\(class .*\)Api\(.*\)/\1\2/' $1
 }
 
@@ -73,7 +75,8 @@ post_process_apis() {
     # remove sufix _api from files
     cd "$OUT_DIR/asana/apis/" || return 1
     for file in *api*; do
-        remove_classname_suiffix $file
+        #trying to remove api's class name suffix
+        remove_classname_suiffix $file || return 1
         mv -- "$file" "${file%%_api.py}.py" || return 1
     done
     cd "$CURRENT_DIR" || return 1
