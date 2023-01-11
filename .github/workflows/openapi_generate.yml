@@ -23,9 +23,9 @@ jobs:
       - name: Check remove classname suffix
         run: |
           echo "Attachments class:";
-          cat {{ github.workspace }}/asana/resources/gen/attachments.py;
-          cat "AuditLogAPI class:"
-          cat {{ github.workspace }}/asana/resources/gen/audit_log_api.py 
+          cat ${{ github.workspace }}/asana/resources/gen/attachments.py;
+          cat "AuditLogAPI class:";
+          cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py 
       - name: Create new branch and push new tags
         run: |
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
