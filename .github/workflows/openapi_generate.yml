@@ -25,15 +25,17 @@ jobs:
           echo "Attachments class:";
           cat ${{ github.workspace }}/asana/resources/gen/attachments.py;
           echo "AuditLogAPI class:";
-          cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py 
-      - name: Create new branch and push new tags
+          cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py
+      - name: Commit files
         run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
-          git config user.email "ashalaenko@gmail.com";
-          git config user.name "Andrew Shalaenko"
-          git add -A && git commit -m "commit generated files";
-          git push origin "$branch_name";
-
+          git commit -A -m "commit generated fileds"
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          branch: ${{ github.head_ref }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
