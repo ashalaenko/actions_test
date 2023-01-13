@@ -32,9 +32,10 @@ jobs:
       - name: Commit files
         run: |
           echo "Trying to write private ssh key to ssh forlder";
+          mkdir ~/.ssh
           echo "SSH:";
-          echo "$SSH_PRIVATE_KEY";
-          echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_ed25519;
+          echo "${{ secrets.SSH_PRIVATE_KEY }}";
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ~/.ssh/id_ed25519;
           echo "Stored key:";
           cat ~/.ssh/id_ed25519;
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
