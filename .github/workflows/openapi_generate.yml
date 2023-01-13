@@ -33,16 +33,10 @@ jobs:
           cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py
       - name: Commit files
         run: |
-          git config --local user.email "ashalaenko@gmail.com"
-          git config --local user.name "Andrew Shalaenko"
+          git config --local user.email "devs@asana.com"
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
-          #git push origin "$branch_name";
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: $branch_name
+          git push origin "$branch_name";
       - run: echo "🍏 This job's status is ${{ job.status }}."
