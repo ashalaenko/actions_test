@@ -31,8 +31,6 @@ jobs:
           cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py
       - name: Commit files
         run: |
-          #mkdir ~/.ssh
-          #echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ~/.ssh/id_ed25519;
           git config --local user.email "ashalaenko@gmail.com"
           git config --local user.name "Andrew Shalaenko"
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
