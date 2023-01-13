@@ -31,13 +31,8 @@ jobs:
           cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py
       - name: Commit files
         run: |
-          echo "Trying to write private ssh key to ssh forlder";
-          mkdir ~/.ssh
-          echo "SSH:";
-          echo "${{ secrets.SSH_PRIVATE_KEY }}";
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ~/.ssh/id_ed25519;
-          echo "Stored key:";
-          cat ~/.ssh/id_ed25519;
+          #mkdir ~/.ssh
+          #echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ~/.ssh/id_ed25519;
           git config --local user.email "ashalaenko@gmail.com"
           git config --local user.name "Andrew Shalaenko"
           current_date_time=$(date '+%Y_%m_%d__%H_%M');
@@ -45,4 +40,6 @@ jobs:
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
           git push origin "$branch_name";
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - run: echo "🍏 This job's status is ${{ job.status }}."
