@@ -6,6 +6,8 @@ on:
 jobs:
   Generate-Apis:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Use JAVA 8 - OpenJDK
         uses: actions/setup-java@v3
