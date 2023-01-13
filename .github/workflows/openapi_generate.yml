@@ -39,5 +39,18 @@ jobs:
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
-          git push origin "$branch_name";
+          #git push origin "$branch_name";
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "$branch_name"
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+      - name: Check outputs
+        if: ${{ steps.cpr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
       - run: echo "🍏 This job's status is ${{ job.status }}."
