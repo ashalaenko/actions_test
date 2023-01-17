@@ -33,7 +33,9 @@ jobs:
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
-          git push origin "$branch_name"
+          git push https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git "$branch_name"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
