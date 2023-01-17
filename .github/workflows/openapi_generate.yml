@@ -33,7 +33,7 @@ jobs:
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
-          git push origin new_brach_2023_01_17__16_09
+          git push origin "$branch_name"
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
