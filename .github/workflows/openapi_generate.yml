@@ -44,7 +44,6 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "$branch_name"
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
