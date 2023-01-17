@@ -66,7 +66,7 @@ post_process_apis() {
     # move apis files to directory asana/apis/ and remove all unused files
     mkdir $OUT_DIR/tmp_apis && cp $OUT_DIR/asana/apis/tags/* $OUT_DIR/tmp_apis && rm -rf $OUT_DIR/asana/* && \
     mkdir $OUT_DIR/asana/apis/ && cp $OUT_DIR/tmp_apis/* $OUT_DIR/asana/apis/ && rm -rf $OUT_DIR/tmp_apis
-    [ $? -ne 0 ] && { echoerr "Could move apis files to needed fiele structure"; return 1; }
+    [ $? -ne 0 ] && { echoerr "Could move apis files to needed file structure"; return 1; }
 
     # remove sufix _api from files
     cd "$OUT_DIR/asana/apis/" || return 1
@@ -96,7 +96,7 @@ post_process_docs() {
     done
     cd $CURRENT_DIR || return 1;
 
-    cp $OUT_DIR/samples/* $ASANA_DOCS_DIR || { echoerr "Could not copy generated dos to $ASANA_DOCS_DIR"; return 1; }
+    cp $OUT_DIR/samples/* $ASANA_DOCS_DIR || { echoerr "Could not copy generated docs to $ASANA_DOCS_DIR"; return 1; }
 }
 
 post_process() {
@@ -110,13 +110,13 @@ main() {
     # prepare generation
     prepare_generation
 
-    #generate apis
+    # generate apis
     generate
 
-    # preocess apis if generation was success
+    # process apis if generation was success
     return_value=$?
     [ $return_value -eq 0 ] && { post_process || exit_code=$?; } || \
-                            { echoerr "Generation was failed"; exit_code=$return_value; }
+                            { echoerr "Generation failed"; exit_code=$return_value; }
 
     # clean generation folder
     clean
