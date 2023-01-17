@@ -25,10 +25,8 @@ get_openapi_generator_cli() {
 
 # check and install openjdk
 check_java() {
-    #local java_version=$(java -version)
-    #[ $? -ne 0 ] || { echoerr "Java is absent"; exit 1; }
+    # TODO :: check if openjdk is present in system and install it otherwise
     :
-
 }
 
 # create working dir for store generated code
@@ -88,13 +86,14 @@ post_process_docs() {
     mkdir $OUT_DIR/samples || return 1
     cp $OUT_DIR/docs/apis/tags/* $OUT_DIR/samples/ || return 1
     cd $OUT_DIR/samples || return 1
-    for file in *Api.md; do 
+    for file in *Api.md; do
         ### lowercase docs files and remove suffix
         ### TODO :: trying to use native bash opportunities instead call tr each time
         new_file_name=$(echo "${file%%Api.md}_sample.yaml" | tr '[:upper:]' '[:lower:]')
         mv -- "$file" "$new_file_name" || return 1;
     done
     cd $CURRENT_DIR || return 1;
+
     cp $OUT_DIR/samples/* $ASANA_DOCS_DIR || { echoerr "Could not copy generated dos to $ASANA_DOCS_DIR"; return 1; }
 }
 
