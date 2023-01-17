@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Asana api generation
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on:
   push:
@@ -42,5 +42,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           target_branch: demo
           title: My pull request
-          body: "**Automated pull request**"
+          body: "**Automated pull request test**"
       - run: echo "🍏 This job's status is ${{ job.status }}."
