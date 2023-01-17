@@ -48,7 +48,7 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: generated_apis_2023_01_17__18_05
+          target_branch: ${{ github.event.inputs.masterBranch }}
           title: Generaed apis
           label: automatic,apiGeneration
       - run: echo "🍏 This job's status is ${{ job.status }}."
