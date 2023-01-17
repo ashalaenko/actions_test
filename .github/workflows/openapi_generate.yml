@@ -1,4 +1,4 @@
-name: Asana api generation manual
+name: Asana api generation
 run-name: ${{ github.actor }} is generating apis
 on:
   workflow_dispatch:
