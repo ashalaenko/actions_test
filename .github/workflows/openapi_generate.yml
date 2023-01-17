@@ -25,12 +25,6 @@ jobs:
         run:  ls ${{ github.workspace }}/asana/resources/gen/
       - name: List files in samples directory and echo current and worksapce directories
         run: ls ${{ github.workspace }}/samples/
-      - name: Check remove classname suffix
-        run: |
-          echo "Attachments class:";
-          cat ${{ github.workspace }}/asana/resources/gen/attachments.py;
-          echo "AuditLogAPI class:";
-          cat ${{ github.workspace }}/asana/resources/gen/audit_log_api.py
       - name: Commit files
         run: |
           git config --local user.email "ashalaenko@gmail.com"
