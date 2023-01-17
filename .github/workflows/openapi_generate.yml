@@ -20,7 +20,7 @@ jobs:
           persist-credentials: false # otherwise, the token used is the GITHUB_TOKEN, instead of your personal access token.
           fetch-depth: 0 
       - name: Run generate script
-        run: ASANA_OAS=./asana_oas_attachments.yml ./generate_api.sh 
+        run: CUSTOM_ASANA_OAS=./asana_oas_attachments.yml ./generate_api.sh 
       - name: List files in the gen directory
         run:  ls ${{ github.workspace }}/asana/resources/gen/
       - name: List files in samples directory and echo current and worksapce directories
@@ -39,11 +39,7 @@ jobs:
           branch_name="new_brach_$current_date_time";
           git checkout -b "$branch_name";
           git add -A && git commit -m "commit generated fileds";
-          #git push origin "$branch_name";
-      - name: Push changes
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          git push
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v4
