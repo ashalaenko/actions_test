@@ -44,7 +44,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Check env var
-        run: echo "Modified = $Modified"
+        run: echo "Modified = $Modified, env.Modified = ${{ env.Modified }}";
       - name: Create Pull Request
         if: ${{ env.Modified == 'true' }}
         uses: devops-infra/action-pull-request@v0.5.3
