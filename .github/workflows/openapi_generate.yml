@@ -10,7 +10,7 @@ on:
       masterBranch:
         description: "Branch for creating PR"
         required: true
-        default: "generated_apis_2023_01_17__18_05"
+        default: "main"
 jobs:
   Generate-Apis:
     runs-on: ubuntu-latest
@@ -41,8 +41,6 @@ jobs:
           }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check env var
-        run: echo "Modified = $Modified, env.Modified = ${{ env.Modified }}";
       - name: Create Pull Request
         if: ${{ env.Modified == 'true' }}
         uses: devops-infra/action-pull-request@v0.5.3
