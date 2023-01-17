@@ -33,8 +33,7 @@ jobs:
         uses: devops-infra/action-pull-request@v0.5.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          target_branch: demo
+          target_branch: generated_apis_2023_01_17__18_05
           title: Generaed apis
           label: automatic,apiGeneration
-          get_diff: true
       - run: echo "🍏 This job's status is ${{ job.status }}."
