@@ -42,5 +42,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           target_branch: demo
           title: My pull request
-          body: "**Automated pull request test**"
+          body: "**Automated pull request test again**"
       - run: echo "🍏 This job's status is ${{ job.status }}."
