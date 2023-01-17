@@ -1,0 +1,676 @@
+---
+openapi: 3.0.0
+info:
+  description: >-
+    This is the interface for interacting with the [Asana
+    Platform](https://developers.asana.com). Our API reference
+    is generated from our [OpenAPI spec]
+    (https://raw.githubusercontent.com/Asana/developer-docs/master/defs/asana_oas.yaml).
+  x-public-description: >-
+    This is the interface for interacting with the [Asana
+    Platform](https://developers.asana.com). Our API reference
+    is generated from our [OpenAPI spec]
+    (https://raw.githubusercontent.com/Asana/developer-docs/master/defs/asana_oas.yaml).
+  title: Asana
+  termsOfService: https://asana.com/terms
+  contact:
+    name: Asana Support
+    url: https://asana.com/support
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+  version: '1.0'
+  x-docs-schema-whitelist:
+    - AsanaResource
+    - AttachmentResponse
+    - AttachmentCompact
+    - ErrorResponse
+    - TaskCompact
+servers:
+  - url: https://app.asana.com/api/1.0
+    description: Main endpoint.
+security:
+  - personalAccessToken: []
+  - oauth2: []
+tags:
+  - name: Attachments
+    description: >-
+      An *attachment* object represents any file attached to a task in Asana,
+      whether it’s an uploaded file or one associated via a third-party service
+      such as Dropbox or Google Drive.
+components:
+  parameters:
+    fields:
+      name: opt_fields
+      in: query
+      description: >-
+        Defines fields to return.
+
+        Some requests return *compact* representations of objects in order to
+        conserve resources and complete the request more efficiently. Other times
+        requests return more information than you may need. This option allows
+        you to list the exact set of fields that the API should be sure to
+        return for the objects. The field names should be provided as paths,
+        described below.
+
+        The id of included objects will always be returned, regardless of the
+        field options.
+      example:
+        - followers
+        - assignee
+      required: false
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: false
+    pretty:
+      name: opt_pretty
+      in: query
+      description: >-
+        Provides “pretty” output.
+
+        Provides the response in a “pretty” format. In the case of JSON this
+        means doing proper line breaking and indentation to make it readable.
+        This will take extra time and increase the response size so it is
+        advisable only to use this during debugging.
+      required: false
+      allowEmptyValue: true
+      schema:
+        type: boolean
+      style: form
+      example: true
+    limit:
+      name: limit
+      in: query
+      description: >-
+        Results per page.
+
+        The number of objects to return per page. The value must be between 1
+        and 100.
+      example: 50
+      schema:
+        type: integer
+    offset:
+      name: offset
+      in: query
+      description: >-
+        Offset token.
+
+        An offset to the next page returned by the API. A pagination request
+        will return an offset token, which can be used as an input parameter to
+        the next request. If an offset is not passed in, the API will return
+        the first page of results.
+
+        'Note: You can only pass in an offset that was returned to you via a
+        previously paginated request.'
+      example: eyJ0eXAiOJiKV1iQLCJhbGciOiJIUzI1NiJ9
+      schema:
+        type: string
+    attachment_path_gid:
+      name: attachment_gid
+      in: path
+      description: >-
+        Globally unique identifier for the attachment.
+      required: true
+      schema:
+        type: string
+      example: '12345'
+      x-env-variable: attachment
+  responses:
+    GenericErrorResponse:
+      description: >-
+        Sadly, sometimes requests to the API are not successful. Failures can
+        occur for a wide range of reasons. In all cases, the API should return
+        an HTTP Status Code that indicates the nature of the failure,
+        with a response body in JSON format containing additional information.
+        In the event of a server error the response body will contain an error
+        phrase. These phrases are automatically generated using the
+        [node-asana-phrase
+        library](https://github.com/Asana/node-asana-phrase) and can be used by
+        Asana support to quickly look up the incident that caused the server
+        error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: >-
+        This usually occurs because of a missing or malformed parameter. Check
+        the documentation and the syntax of your request and try again.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: >-
+        A valid authentication token was not provided with the request, so the
+        API could not associate a user with the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    PaymentRequired:
+      description: >-
+        The request was valid, but the queried object or object mutation
+        specified in the request is above your current premium level.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: >-
+        The authentication and request syntax was valid but the server is
+        refusing to complete the request. This can happen if you try to read or
+        write to objects or properties that the user does not have access to.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: >-
+        Either the request method and path supplied do not specify a known
+        action in the API, or the object specified by the request does not
+        exist.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    TooManyRequests:
+      description: >-
+        You have exceeded one of the enforced rate limits in the API. See the
+        [documentation on rate
+        limiting](https://developers.asana.com/docs/#rate-limits)
+        for more information.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: >-
+        There was a problem on Asana’s end.
+        In the event of a server error the response body should contain an error
+        phrase. These phrases can be used by Asana support to quickly look up the
+        incident that caused the server error.
+        Some errors are due to server load, and will not supply an error phrase.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadGateway:
+      description: >-
+        There is an issue between the load balancers and Asana's API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    ServiceUnavailable:
+      description: >-
+        Either the upstream service is unavailable to the API, or the API has been
+        intentionally shut off.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    GatewayTimeout:
+      description: >-
+        This request took too long to complete.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    AsanaResource:
+      description: >-
+        A generic Asana Resource, containing a globally unique identifier.
+      type: object
+      properties:
+        gid:
+          description: >-
+            Globally unique identifier of the resource, as a string.
+          type: string
+          readOnly: true
+          example: '12345'
+          x-insert-after: false
+        resource_type:
+          description: The base type of this resource.
+          type: string
+          readOnly: true
+          example: task
+          x-insert-after: gid
+    AttachmentBase:
+      $ref: '#/components/schemas/AttachmentCompact'
+    AttachmentCompact:
+      allOf:
+        - $ref: '#/components/schemas/AsanaResource'
+        - type: object
+          description: >-
+            An *attachment* object represents any file attached to a task in
+            Asana, whether it’s an uploaded file or one associated via a
+            third-party service such as Dropbox or Google Drive.
+          x-docs-overrides:
+            properties.resource_type.example: attachment
+          properties:
+            name:
+              description: The name of the file.
+              type: string
+              readOnly: true
+              example: Screenshot.png
+            resource_subtype:
+              description: >-
+                The service hosting the attachment. Valid values are `asana`,
+                `dropbox`, `gdrive`, `onedrive`, `box`, `vimeo`, and `external`.
+              type: string
+              example: dropbox
+    AttachmentRequest:
+      type: object
+      properties:
+        resource_subtype:
+          description: >
+            The type of the attachment. Must be one of the [given values](/docs/attachment).
+            If not specified, a file attachment of type `asana`
+            will be assumed. Note that if the value of `resource_subtype` is `external`,
+            a
+            `parent`, `name`, and `url` must also be provided.
+          type: string
+          example: external
+          enum:
+            - asana_file_attachments
+            - external
+        file:
+          description: >
+            Required for `asana` attachments.
+          type: string
+          format: binary
+        parent:
+          description: >
+            Required identifier of the parent task, project, or project_brief, as
+            a string.
+          type: string
+        url:
+          description: >
+            The URL of the external resource being attached. Required for
+            attachments of type `external`.
+          type: string
+        name:
+          description: >
+            The name of the external resource being attached. Required for
+            attachments of type `external`.
+          type: string
+    AttachmentResponse:
+      allOf:
+        - $ref: '#/components/schemas/AttachmentBase'
+        - type: object
+          properties:
+            created_at:
+              description: The time at which this resource was created.
+              type: string
+              format: date-time
+              readOnly: true
+              example: '2012-02-22T02:06:58.147Z'
+            download_url:
+              description: >-
+                The URL containing the content of the attachment.
+
+                *Note:* May be null if the attachment is hosted by
+                [Box](https://www.box.com/) and will be null if the attachment
+                is a Video Message hosted by [Vimeo](https://vimeo.com/). If
+                present, this URL may only be valid for two minutes from the
+                time of retrieval. You should avoid persisting this URL somewhere
+                and just refresh it on demand to ensure you do not keep stale URLs.
+              type: string
+              format: uri
+              readOnly: true
+              nullable: true
+              example: https://s3.amazonaws.com/assets/123/Screenshot.png
+            permanent_url:
+              description: >
+              type: string
+              format: uri
+              readOnly: true
+              nullable: true
+              example: https://s3.amazonaws.com/assets/123/Screenshot.png
+            host:
+              description: >-
+                The service hosting the attachment. Valid values are `asana`,
+                `dropbox`, `gdrive`, `box`, and `vimeo`.
+              type: string
+              readOnly: true
+              example: dropbox
+            parent:
+              allOf:
+                - $ref: '#/components/schemas/TaskCompact'
+                - type: object
+                  description: The task this attachment is attached to.
+                  readOnly: true
+                  properties:
+                    resource_subtype:
+                      description: >-
+                        The resource subtype of the parent resource that the filter
+                        applies to.
+                      type: string
+                      example: default_task
+                      nullable: true
+            size:
+              description: >-
+                The size of the attachment in bytes. Only present when the `resource_subtype`
+                is `asana`.
+              type: integer
+              readOnly: true
+              example: 12345
+            view_url:
+              description: >-
+                The URL where the attachment can be viewed, which may be
+                friendlier to users in a browser than just directing them to a raw
+                file. May be null if no view URL exists for the service.
+              type: string
+              format: uri
+              readOnly: true
+              nullable: true
+              example: https://www.dropbox.com/s/123/Screenshot.png
+    EmptyResponse:
+      type: object
+      description: >-
+        An empty object. Some endpoints do not return an object on success. The
+        success is conveyed through a 2-- status code and returning an empty
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          readOnly: true
+          description: >-
+            Message providing more detail about the error that occurred, if
+            available.
+          example: 'project: Missing input'
+        help:
+          type: string
+          readOnly: true
+          description: >-
+            Additional information directing developers to resources on how
+            to address and fix the problem, if available.
+          example: >-
+            For more information on API status codes and how to handle them,
+            read the docs on errors:
+            https://asana.github.io/developer-docs/#errors'
+        phrase:
+          type: string
+          readOnly: true
+          description: >-
+            *500 errors only*. A unique error phrase which can be used
+            when contacting developer support to help identify the exact
+            occurrence of the problem in Asana’s logs.
+          example: 6 sad squid snuggle softly
+    ErrorResponse:
+      description: |-
+        Sadly, sometimes requests to the API are not successful. Failures can
+        occur for a wide range of reasons. In all cases, the API should return
+        an HTTP Status Code that indicates the nature of the failure,
+        with a response body in JSON format containing additional information.
+
+
+        In the event of a server error the response body will contain an error
+        phrase. These phrases are automatically generated using the
+        [node-asana-phrase
+        library](https://github.com/Asana/node-asana-phrase) and can be used by
+        Asana support to quickly look up the incident that caused the server
+        error.
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+
+
+    TaskCompact:
+      allOf:
+        - $ref: '#/components/schemas/AsanaResource'
+        - type: object
+          description: >-
+            The *task* is the basic object around which many operations in Asana
+            are centered.
+          x-docs-overrides:
+            properties.resource_type.example: task
+          properties:
+            name:
+              description: The name of the task.
+              type: string
+              example: Bug Task
+            resource_subtype:
+              type: string
+              description: >-
+                The subtype of this resource. Different subtypes retain many of
+                the same fields and behavior, but may render differently in Asana
+                or represent resources with different semantic meaning.
+
+                The resource_subtype `milestone` represent a single moment in
+                time. This means tasks with this subtype cannot have a start_date.
+              enum:
+                - default_task
+                - milestone
+                - section
+                - approval
+              example: default_task
+  securitySchemes:
+    personalAccessToken:
+      type: http
+      description: >-
+        A personal access token allows access to the api for the user who
+        created it. This should be kept a secret and be treated like a
+        password.
+      scheme: bearer
+    oauth2:
+      type: oauth2
+      description: >-
+        We require that applications designed to access the Asana API on behalf
+        of multiple users implement OAuth 2.0.
+
+        Asana supports the Authorization Code Grant flow.
+      flows:
+        authorizationCode:
+          authorizationUrl: https://app.asana.com/-/oauth_authorize
+          tokenUrl: https://app.asana.com/-/oauth_token
+          refreshUrl: https://app.asana.com/-/oauth_token
+          scopes:
+            default: >-
+              Provides access to all endpoints documented in our API reference.
+              If no scopes are requested, this scope is assumed by default.
+            openid: >-
+              Provides access to OpenID Connect ID tokens and the OpenID Connect
+              user info endpoint.
+            email: >-
+              Provides access to the user’s email through the OpenID Connect
+              user info endpoint.
+            profile: >-
+              Provides access to the user’s name and profile photo through the
+              OpenID Connect user info endpoint.
+paths:
+  /attachments/{attachment_gid}:
+    parameters:
+      - $ref: '#/components/parameters/attachment_path_gid'
+      - $ref: '#/components/parameters/pretty'
+      - $ref: '#/components/parameters/fields'
+    get:
+      summary: Get an attachment
+      description: Get the full record for a single attachment.
+      tags:
+        - Attachments
+      operationId: getAttachment
+      responses:
+        200:
+          description: Successfully retrieved the record for a single attachment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AttachmentResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        402:
+          $ref: '#/components/responses/PaymentRequired'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        424:
+          $ref: '#/components/responses/TooManyRequests'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/BadGateway'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+        504:
+          $ref: '#/components/responses/GatewayTimeout'
+    delete:
+      summary: Delete an attachment
+      description: |-
+        Deletes a specific, existing attachment.
+
+        Returns an empty data record.
+      tags:
+        - Attachments
+      operationId: deleteAttachment
+      responses:
+        200:
+          description: Successfully deleted the specified attachment.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/EmptyResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+  /attachments:
+    parameters:
+      - $ref: '#/components/parameters/pretty'
+      - $ref: '#/components/parameters/fields'
+    get:
+      summary: Get attachments from an object
+      description: >-
+        Returns the compact records for all attachments on the object.
+
+
+        There are three possible `parent` values for this request: `project`, `project_brief`,
+        and `task`.
+        For a project, an attachment refers to a file uploaded to the "Key resources"
+        section in the project
+        Overview. For a project brief, an attachment refers to inline files in the
+        project brief itself. For
+        a task, an attachment refers to a file directly associated to that task.
+      tags:
+        - Attachments
+      operationId: getAttachmentsForObject
+      parameters:
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - name: parent
+          required: true
+          in: query
+          description: >-
+            Globally unique identifier for object to fetch statuses from. Must be
+            a GID
+            for a `project`, `project_brief`, or `task`.
+          schema:
+            type: string
+          example: '159874'
+      responses:
+        200:
+          description: >-
+            Successfully retrieved the specified object's attachments.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AttachmentCompact'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      summary: Upload an attachment
+      description: |-
+        Upload an attachment.
+
+        This method uploads an attachment on an object and returns the compact
+        record for the created attachment object. This is possible by either:
+
+        - Providing the URL of the external resource being attached, or
+        - Downloading the file content first and then uploading it as any other attachment. Note that it is not possible to attach
+        files from third party services such as Dropbox, Box, Vimeo & Google Drive via the API
+
+        The 100MB size limit on attachments in Asana is enforced on this endpoint.
+
+        This endpoint expects a multipart/form-data encoded request containing
+        the full contents of the file to be uploaded.
+
+        Requests made should follow the HTTP/1.1 specification that line
+        terminators are of the form `CRLF` or `\r\n` outlined
+        [here](http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01#Basic-Rules)
+        in order for the server to reliably and properly handle the request.
+      tags:
+        - Attachments
+      operationId: createAttachmentForObject
+      requestBody:
+        description: |-
+          The file you want to upload.
+
+          *Note when using curl:*
+
+          Be sure to add an `‘@’` before the file path, and use the `--form`
+          option instead of the `-d` option.
+
+          When uploading PDFs with curl, force the content-type to be pdf by
+          appending the content type to the file path: `--form
+          "file=@file.pdf;type=application/pdf"`.
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AttachmentRequest'
+      responses:
+        200:
+          description: Successfully uploaded the attachment to the parent object.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AttachmentResponse'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/InternalServerError'
