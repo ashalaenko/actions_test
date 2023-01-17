@@ -77,6 +77,8 @@ post_process_apis() {
     done
     cd "$CURRENT_DIR" || return 1
 
+    # Modify __init__.py
+    echo "from . import *\n" > $OUT_DIR/asana/apis/__init__.py
     cp $OUT_DIR/asana/apis/* $ASANA_APIS_DIR || { echoerr "Could not copy generated files to $ASANA_APIS_DIR"; return 1; }
 }
 
