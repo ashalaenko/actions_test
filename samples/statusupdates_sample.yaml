@@ -1,4 +1,4 @@
-: 
+statusupdatesapi: 
     create_status_for_object: >-
         import asana
 
@@ -14,7 +14,7 @@
         client = asana.Client.access_token('PERSONAL_ACCESS_TOKEN')
 
 
-        result = client.status updates.delete_status(status_gid, {'field': 'value', 'field': 'value'}, opt_pretty=True)
+        result = client.status updates.delete_status(status_gid, opt_pretty=True)
     get_status: >-
         import asana
 
@@ -22,7 +22,7 @@
         client = asana.Client.access_token('PERSONAL_ACCESS_TOKEN')
 
 
-        result = client.status updates.get_status(status_gid, {'field': 'value', 'field': 'value'}, opt_pretty=True)
+        result = client.status updates.get_status(status_gid, {'param': 'value', 'param': 'value'}, opt_pretty=True)
     get_statuses_for_object: >-
         import asana
 
@@ -30,4 +30,4 @@
         client = asana.Client.access_token('PERSONAL_ACCESS_TOKEN')
 
 
-        result = client.status updates.get_statuses_for_object({'field': 'value', 'field': 'value'}, opt_pretty=True)
+        result = client.status updates.get_statuses_for_object({'param': 'value', 'param': 'value'}, opt_pretty=True)
